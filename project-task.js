@@ -44,6 +44,24 @@ Step-by-Step:
 3. Return the filtered result.
 */
 
+// For this one, I made a function called `filterProducts` that takes in a callback,
+// so I can filter the products however I want. I tried it out by getting just the in-stock
+// items and also the expensive ones (over $500).
+
+function filterProducts(productArray, callback) {
+  return productArray.filter(callback);
+}
+
+// Example
+// Filtering products that are in stock
+const inStockOnly = filterProducts(products, function(product) {
+  return product.inStock;
+});
+
+// Filtering products that are above $500
+const expensiveProducts = filterProducts(products, function(product) {
+  return product.price > 500;
+});
 
 /*
 🔹 Task 2: Transform Product Names
@@ -55,6 +73,13 @@ Step-by-Step:
 2. Extract and transform the `name` property to uppercase.
 3. Store the result in a new variable.
 */
+
+// I used `map()` here to go through the products and turn all the names into uppercase.
+// Just a quick way to transform the list without changing the original.
+
+const uppercasedNames = products.map(function(product) {
+  return product.name.toUpperCase();
+});
 
 
 /*
@@ -70,6 +95,21 @@ Step-by-Step:
 3. Use this returned function inside a `map()` call to apply discounts to all products.
 */
 
+// This part was kind of cool. I made a function that takes a discount percentge
+// and returns another function that updates the price. Then I used `map()` with it
+// to apply a 20% discount to everything.
+
+function applyDiscount(discountPercent) {
+  return function(product) {
+    const discountedPrice = product.price * (1 - discountPercent / 100);
+    return { ...product, price: discountedPrice };
+  };
+}
+
+// Example
+// Applying a 20% discount to all products
+const discount20 = applyDiscount(20);
+const discountedProducts = products.map(discount20);
 
 /*
 🔹 Task 4: Calculate Total Inventory Value
@@ -82,6 +122,15 @@ Step-by-Step:
 3. Store the total in a new variable.
 */
 
+// I used `reduce()` here to total up the prices of just the instock products.
+// It skips anything that’s out of stock and adds the rest to the total.
+
+const totalInStockValue = products.reduce(function(accumulator, product) {
+  if (product.inStock) {
+    return accumulator + product.price;
+  }
+  return accumulator;
+}, 0);
 
 // ============================================
 // 🧪 Console Test Your Work
@@ -91,3 +140,9 @@ Step-by-Step:
 // console.log("Uppercased names:", ...);
 // console.log("Discounted products:", ...);
 // console.log("Total value in stock:", ...);
+
+console.log("Filtered products (in stock):", inStockOnly);
+console.log("Filtered products (expensive):", expensiveProducts);
+console.log("Uppercased names:", uppercasedNames);
+console.log("Discounted products (20% off):", discountedProducts);
+console.log("Total value in stock:", totalInStockValue);
